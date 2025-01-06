@@ -10,6 +10,8 @@ const { Op } = require('sequelize');
 app.use(cors({
     origin: 'https://divyarajsinh000.github.io/', // React app origin
     methods: ['GET', 'POST','PATCH','DELETE'],
+     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 app.use(bodyParser.json());
