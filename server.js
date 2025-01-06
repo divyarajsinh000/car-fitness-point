@@ -8,7 +8,7 @@ const app = express();
 const cors = require('cors');
 const { Op } = require('sequelize');
 app.use(cors({
-    origin: 'http://localhost:3000', // React app origin
+    origin: 'https://divyarajsinh000.github.io/', // React app origin
     methods: ['GET', 'POST','PATCH','DELETE'],
 }));
 
