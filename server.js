@@ -7,10 +7,10 @@ const Otp = require('./Models/otp');
 const app = express();
 const cors = require('cors');
 const { Op } = require('sequelize');
+
 app.use(cors({
-    origin: 'https://divyarajsinh000.github.io/Frontend_code', // React app origin
-    methods: ['GET', 'POST','PATCH','DELETE'],
-     allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ['http://localhost:3000', 'https://divyarajsinh000.github.io'], // Allow both local and deployed frontend
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
 }));
 
