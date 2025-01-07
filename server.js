@@ -9,7 +9,6 @@ const cors = require('cors');
 const { Op } = require('sequelize');
 
 app.use(cors({
-  origin: [*]
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
 }));
