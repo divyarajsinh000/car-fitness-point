@@ -252,7 +252,37 @@ app.get('/transactions/report', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
+app.get('/transactions/filter', async (req, res) => {
+    const { fromDate, toDate, customerId,price,vehicleType } = req.query;
+    try {
+        const whereCondition = {}
+         // Handle date conditions
+         if (fromDate && toDate) {
+            whereCondition.OperationDate = {
+                [Op.between]: [new Date(fromDate), new Date(toDate)],
+            };
+        } else if (fromDate) {
+            whereCondition.OperationDate = {
+                [Op.gte]: new Date(fromDate),
+            };
+        } else if (toDate) {
+            whereCondition.OperationDate = {
+                [Op.lte]: new Date(toDate),
+            };
+        }
+        if (customerId) whereCondition.CustomerId = customerId;
+        if (price) whereCondition.Price = price;
+        if (vehicleType) whereCondition.VehicleType = vehicleType;
+        const report = await Transaction.findAll({
+            where: whereCondition,
+            include: [{ model: Customer, attributes: ['CustomerName','MobileNo'] }],
+        });
+        res.json(report);
+    } catch (error) {
+        console.log("eror",error)
+        res.status(500).json({ error: error.message });
+    }
+});
 app.get('/dashboard', async (req, res) => {
     try {
       const totalCustomers = await Customer.count();
