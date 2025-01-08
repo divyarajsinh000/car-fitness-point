@@ -7,9 +7,10 @@ const Otp = require('./Models/otp');
 const app = express();
 const cors = require('cors');
 const { Op } = require('sequelize');
+
 app.use(cors({
-    origin: 'https://divyarajsinh000.github.io/', // React app origin
-    methods: ['GET', 'POST','PATCH','DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    credentials: true,
 }));
 
 app.use(bodyParser.json());
@@ -58,33 +59,31 @@ app.post('/request-otp', async (req, res) => {
     }
 
     try {
+        // Use a fixed OTP
+        const fixedOtp = '565656';
+
         // Check if an OTP already exists for this mobile number
         const existingOtp = await Otp.findOne({
             where: { mobile_no: mobileNo }
         });
 
         if (existingOtp) {
-            // If OTP exists, simply send the success message
-            console.log(`OTP already sent to ${mobileNo}: ${existingOtp.otp_code}`);
+            // If OTP exists, update it to the fixed OTP
+            await existingOtp.update({ otp_code: fixedOtp });
+            console.log(`Fixed OTP for ${mobileNo}: ${fixedOtp}`);
             return res.status(200).json({ message: 'OTP sent successfully!' });
         } else {
-            // If no OTP exists, generate and store a new OTP
-            const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-            // Save the OTP to the database
-            await Otp.create({ mobile_no: mobileNo, otp_code: otpCode });
-            console.log(`OTP for ${mobileNo}: ${otpCode}`);
-
-            // Send OTP to the user (via SMS gateway)
-            console.log(`OTP for ${mobileNo}: ${otpCode}`); // Replace this with actual SMS sending logic
-
+            // If no OTP exists, create a new record with the fixed OTP
+            await Otp.create({ mobile_no: mobileNo, otp_code: fixedOtp });
+            console.log(`Fixed OTP for ${mobileNo}: ${fixedOtp}`);
             return res.status(200).json({ message: 'OTP sent successfully!' });
         }
     } catch (error) {
-        console.error('Error generating OTP:', error);
-        res.status(500).json({ error: 'Failed to generate OTP' });
+        console.error('Error handling OTP:', error);
+        res.status(500).json({ error: 'Failed to handle OTP' });
     }
 });
+
 
 app.post('/customers', async (req, res) => {
     try {
