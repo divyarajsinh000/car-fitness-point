@@ -8,7 +8,7 @@ const app = express();
 const cors = require('cors');
 const { Op } = require('sequelize');
 app.use(cors({
-    origin: 'http://localhost:3000', // React app origin
+    origin: 'https://divyarajsinh000.github.io/', // React app origin
     methods: ['GET', 'POST','PATCH','DELETE'],
 }));
 
@@ -199,7 +199,7 @@ app.post('/transactions', async (req, res) => {
 // PATCH route to update a transaction by ID
 app.patch('/transactions/:id', async (req, res) => {
     const { id } = req.params;
-    const { CustomerId, VehicleNo, OperationDate,Price } = req.body;
+    const { CustomerId, VehicleNo, OperationDate,Price,VehicleType } = req.body;
 
     try {
         const transaction = await Transaction.findByPk(id);
@@ -212,6 +212,7 @@ app.patch('/transactions/:id', async (req, res) => {
         transaction.VehicleNo = VehicleNo || transaction.VehicleNo;
         transaction.Price = Price || transaction.Price;
         transaction.OperationDate = OperationDate || transaction.OperationDate;
+        transaction.VehicleType = VehicleType ||transaction.VehicleType;
 
         await transaction.save(); // Save the updated transaction
 
